@@ -82,6 +82,7 @@ const SearchResult: React.FC<IShabadResultProps> = ({
   const shabadPageNo = getAng(shabad) === null ? '' : getAng(shabad);
 
   const isSearchTypeEnglishWord = type === SEARCH_TYPES.ENGLISH_WORD;
+  const isSearchTypeAskaQuestion = type === SEARCH_TYPES.ASK_A_QUESTION;
   const shabadEnglishTranslation = translationMap['english'](shabad);
 
   // english-word search type we needs to highlight index for english translations.
@@ -158,7 +159,7 @@ const SearchResult: React.FC<IShabadResultProps> = ({
                   larivaarAssist={larivaarAssist}
                   enable={larivaar}
                   unicode={unicode}
-                  highlightIndex={isSearchTypeEnglishWord ? [] : highlightIndex}
+                  highlightIndex={(isSearchTypeEnglishWord || isSearchTypeAskaQuestion) ? [] : highlightIndex}
                   query={q}
                   visraam={shabad.visraam}
                 >
@@ -171,7 +172,7 @@ const SearchResult: React.FC<IShabadResultProps> = ({
                   type={type}
                   larivaarAssist={larivaarAssist}
                   enable={larivaar}
-                  highlightIndex={isSearchTypeEnglishWord ? [] : highlightIndex}
+                  highlightIndex={(isSearchTypeEnglishWord || isSearchTypeAskaQuestion) ? [] : highlightIndex}
                   query={q}
                   visraam={shabad.visraam}
                 >

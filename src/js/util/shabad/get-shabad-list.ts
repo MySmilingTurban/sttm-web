@@ -7,44 +7,56 @@ import { getHighlightIndices } from '../gurbani';
 export const getShabadList = (q, { type, source, writer }) => {
   const offset = 1;
   const isSearchTypeRomanizedFirstLetters = type === SEARCH_TYPES.ROMANIZED_FIRST_LETTERS_ANYWHERE;
+  const isSearchAskaQuestion = type === SEARCH_TYPES.ASK_A_QUESTION;
   const livesearch = !isSearchTypeRomanizedFirstLetters;
-  const url = encodeURI(buildApiUrl({ q, type, source, writer, offset, API_URL, livesearch }));
-
+  const url = ( isSearchAskaQuestion ? encodeURI(`https://semanticgurbanisearch.sevaa.win/search/?query=${q}&count=5`).replace(/%20/g, '%') : encodeURI(buildApiUrl({ q, type, source, writer, offset, API_URL, livesearch })));
   return new Promise((resolve, reject) => {
     const json = fetch(url).then((response) => response.json());
     json.then(
       (data) => {
-        const { verses } = data;
         let panktiList = [];
-        for (const shabad of verses) {
-          let highlightPankti = getGurmukhiVerse(shabad);
-          if (type === 3) {
-            highlightPankti = translationMap["english"](shabad);
+        if (isSearchAskaQuestion) {
+          const { results } = data;
+          for (const shabad of results) {
+            panktiList.push({
+              shabadId: shabad.ID,
+            })
           }
+        } else {
 
-          if (isSearchTypeRomanizedFirstLetters) {
-            highlightPankti = transliterationMap["english"](shabad);
+          const { verses } = data;
+          for (const shabad of verses) {
+            let highlightPankti = getGurmukhiVerse(shabad);
+            if (type === 3) {
+              highlightPankti = translationMap["english"](shabad);
+            }
+  
+            if (isSearchTypeRomanizedFirstLetters) {
+              highlightPankti = transliterationMap["english"](shabad);
+            }
+  
+            const highlightIndex = getHighlightIndices(
+              highlightPankti,
+              q,
+              type
+            );
+  
+            panktiList.push({
+              pankti: getGurmukhiVerse(shabad),
+              translation: translationMap["english"](shabad),
+              query: q,
+              url: toShabadURL({ shabad, q, type, source }),
+              highlightIndex,
+              verseId: getVerseId(shabad),
+              shabadId: getShabadId(shabad),
+              verse: getUnicodeVerse(shabad)
+            })
           }
-
-          const highlightIndex = getHighlightIndices(
-            highlightPankti,
-            q,
-            type
-          );
-
-          panktiList.push({
-            pankti: getGurmukhiVerse(shabad),
-            translation: translationMap["english"](shabad),
-            query: q,
-            url: toShabadURL({ shabad, q, type, source }),
-            highlightIndex,
-            verseId: getVerseId(shabad),
-            shabadId: getShabadId(shabad),
-            verse: getUnicodeVerse(shabad)
-          })
         }
         resolve(panktiList);
       },
-      (error) => { reject(error); });
+      (error) => { 
+        console.log(error);
+        reject(error); });
   });
 }

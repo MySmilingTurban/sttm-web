@@ -1,7 +1,19 @@
-import { SOURCES, SOURCES_WITH_ANG, TYPES as _TYPES } from '@sttm/banidb';
+import { SOURCES, SOURCES_WITH_ANG } from '@sttm/banidb';
 import { SEARCH_TYPES } from './search-types';
 
 export { SOURCES, SOURCES_WITH_ANG };
+
+const _TYPES = [
+  "First letter each word from start (Gurmukhi)",
+  "First letter each word anywhere (Gurmukhi)",
+  "Full Word (Gurmukhi)",
+  "Full Word Translation (English)",
+  "Romanized Gurmukhi (English)",
+  "Ang",
+  "Main Letters (Gurmukhi)",
+  "Romanized first letter anywhere (English)",
+  "Ask a Question"
+]
 
 export const BANI_LENGTH_COLS = {
   short: 'existsSGPC',

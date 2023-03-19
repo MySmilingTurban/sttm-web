@@ -9,7 +9,7 @@ export const getShabadList = (q, { type, source, writer }) => {
   const isSearchTypeRomanizedFirstLetters = type === SEARCH_TYPES.ROMANIZED_FIRST_LETTERS_ANYWHERE;
   const isSearchAskaQuestion = type === SEARCH_TYPES.ASK_A_QUESTION;
   const livesearch = !isSearchTypeRomanizedFirstLetters;
-  const url = ( isSearchAskaQuestion ? encodeURI(`https://semanticgurbanisearch.sevaa.win/search/?query=${q}&count=5`).replace(/%20/g, '%') : encodeURI(buildApiUrl({ q, type, source, writer, offset, API_URL, livesearch })));
+  const url = ( isSearchAskaQuestion ? encodeURI(`https://semanticgurbanisearch.sevaa.win/search/?query=${q}&count=5`) : encodeURI(buildApiUrl({ q, type, source, writer, offset, API_URL, livesearch })));
   return new Promise((resolve, reject) => {
     const json = fetch(url).then((response) => response.json());
     json.then(

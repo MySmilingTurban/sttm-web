@@ -9,8 +9,8 @@ import { CHATBOT_API_URL } from '@/constants';
 export const getShabadIDList = async function (query: String) {
     // refine the query for url
     console.log("query", query);
-    query = query.replace(/ /g, "+");
-    const uri = `${CHATBOT_API_URL}/search/?query=${query}&count=5`;
+    query = query.replace(" ", "%20");
+    const uri = `${CHATBOT_API_URL}search/?query=${query}&count=5`;
     let res;
     try {
         res = await axios.get(uri);

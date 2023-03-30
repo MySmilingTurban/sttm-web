@@ -30,3 +30,4 @@ export const MAHANKOSH_TOOLTIP_SOURCE = 'Source: Mahaan Kosh (Encyclopedia)';
 export const HUKAMNAMA_AUDIO_URL='http://old.sgpc.net/hukumnama/jpeg%20hukamnama/hukamnama.mp3';
 export const S3_BUCKET_URL = 'https://sikhifm-audio.s3.us-west-1.amazonaws.com/';
 export const API_URL = "https://sttm-fm.thedev.studio/v1/";
+export const CHATBOT_API_URL = "https://semanticgurbanisearch.sevaa.win/"

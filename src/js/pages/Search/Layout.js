@@ -4,7 +4,7 @@ import { Link, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Pagination from '../../components/Pagination';
-import { toShabadURL, toSearchURL } from '../../util';
+import { toShabadURL, toSearchURL, getShabadIDList } from '../../util';
 import { TYPES, SOURCES, PLACEHOLDERS, TEXTS } from '../../constants';
 import {
   ACTIONS,
@@ -29,7 +29,7 @@ class Layout extends React.PureComponent {
   };
 
   render() {
-    const {
+    let {
       pages,
       offset,
       q,
@@ -40,6 +40,20 @@ class Layout extends React.PureComponent {
       ...props
     } = this.props;
 
+    if (parseInt(type, 10) === 8) {
+      // get data from chatbot then get shabads from id list
+      const shabadList = getShabadIDList(q);
+      console.log('shabadList', shabadList);
+      // shabads = getShabadsFromShabadIDList(shabadList);
+      // resultsCount = shabads.length;
+
+      // <Redirect to={ toSearchURL({ 
+      //   shabads,
+      //   type,
+      //   source,
+      //   offset: 0
+      //  }) } />
+    }
     if (parseInt(resultsCount, 10) === 0) {
       const className = PLACEHOLDERS[type][1] === true ? '' : 'gurbani-font';
 
@@ -79,6 +93,7 @@ class Layout extends React.PureComponent {
       const [shabad] = shabads;
       return <Redirect to={toShabadURL({ shabad, q, type, source })} />;
     }
+
 
     const currentPage = offset;
 

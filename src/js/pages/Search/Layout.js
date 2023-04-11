@@ -22,11 +22,33 @@ export function Stub() {
 }
 
 class Layout extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      chatbotData: {},
+    };
+  }
+
   static propTypes = {
     pages: PropTypes.array,
     offset: PropTypes.number,
     ...SearchResults.propTypes,
   };
+
+  setChatbotData = (data) => {
+    this.setState({ chatbotDataUrl: data });
+  }
+
+  async componentDidMount() {
+    const { q, type, offset, source } = this.props;
+    console.log("type: ", type);
+    if ( type === 8 ) {
+      const shabadList = await getShabadIDList(q);
+      this.setChatbotData(shabadList);
+
+    } 
+    pageView(toSearchURL({ q, type, source, offset }));
+  }
 
   render() {
     let {
@@ -40,20 +62,6 @@ class Layout extends React.PureComponent {
       ...props
     } = this.props;
 
-    if (parseInt(type, 10) === 8) {
-      // get data from chatbot then get shabads from id list
-      const shabadList = getShabadIDList(q);
-      console.log('shabadList', shabadList);
-      // shabads = getShabadsFromShabadIDList(shabadList);
-      // resultsCount = shabads.length;
-
-      // <Redirect to={ toSearchURL({ 
-      //   shabads,
-      //   type,
-      //   source,
-      //   offset: 0
-      //  }) } />
-    }
     if (parseInt(resultsCount, 10) === 0) {
       const className = PLACEHOLDERS[type][1] === true ? '' : 'gurbani-font';
 
@@ -140,11 +148,6 @@ class Layout extends React.PureComponent {
       })
     );
   };
-
-  componentDidMount() {
-    const { q, type, offset, source } = this.props;
-    pageView(toSearchURL({ q, type, source, offset }));
-  }
 }
 
 const stateToProps = (state) => state;

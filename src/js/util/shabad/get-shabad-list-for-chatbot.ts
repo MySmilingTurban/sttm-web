@@ -1,34 +1,53 @@
 import axios from 'axios';
 import { buildApiUrl, SOURCES } from '@sttm/banidb';
-import { SEARCH_TYPES } from '@/constants';
+import { API_URL, SEARCH_TYPES, CHATBOT_API_URL } from '@/constants';
 import { toShabadURL } from '../url';
 import { translationMap, transliterationMap, getGurmukhiVerse, getVerseId, getShabadId, getUnicodeVerse } from '../api/shabad';
 import { getHighlightIndices } from '../gurbani';
-import { CHATBOT_API_URL } from '@/constants';
 
 export const getShabadIDList = async function (query: String) {
     // refine the query for url
-    console.log("query", query);
-    query = query.replace(" ", "%20");
-    const uri = `${CHATBOT_API_URL}search/?query=${query}&count=5`;
-    let res;
-    try {
-        res = await axios.get(uri);
-    } catch (error) {
-        console.log(error);
-    }
-    const { results } = res?.data;
-    let idList = [];
-    for (const shabad of results) {
-        idList.push(shabad.ID);
-    }
-    return idList;
+    const url = encodeURI(`${CHATBOT_API_URL}search/?query=${query}&count=20`);
+    // let res;
+    // try {
+    //     res = await axios.get(uri);
+    // } catch (error) {
+    //     console.log(error);
+    // }
+    // let idList = [];
+    // if (res.status === 200) {
+    //     console.log("resData: ", res);
+    //     const { results } = res.data;
+    //     for (const shabad of results) {
+    //         idList.push(shabad.ID);
+    //     }
+    // }
+    // return idList;
+    return new Promise((resolve, reject) => {
+        const json = fetch(url).then((response) => response.json());
+        json.then(
+          (data) => {
+            let idList = [];
+            const { results } = data;
+            for (const shabad of results) {
+                idList.push(shabad.ID);
+            }
+            // let idString = `https://api.banidb.com/shabads/${idList.join(',')}`;
+            resolve(idList);
+          },
+          (error) => { 
+            console.log(error);
+            reject(error); });
+      });
+}
+
+export const getShabadListURL =  async function (query:String) {
+    const idList = await getShabadIDList(query);
+    return `https://api.banidb.com/v2/shabads/${idList.join(",")}`;
 }
 
 export const getShabadsFromShabadIDList = (idList: Object[], q: string) => {
-    const url = `https://api.banidb.com/v2/shabads/${idList.join(
-        ","
-    )}`;
+    const url = `https://api.banidb.com/v2/shabads/${idList.join(",")}`;
     return new Promise((resolve, reject) => {
         const json = fetch(url).then((response) => response.json());
         json.then(

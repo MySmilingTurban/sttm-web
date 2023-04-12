@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { SOURCES, SEARCH_TYPES, TYPES, SOURCES_WITH_ANG, MAX_ANGS, SOURCE_WRITER_FILTER } from '../../constants';
-import { toSearchURL, getShabadList, reformatSearchTypes } from '../../util';
+import { toSearchURL, getShabadList, reformatSearchTypes, getShabadsFromChatbot } from '../../util';
 import { pageView } from '../../util/analytics';
 
 
@@ -168,7 +168,7 @@ class Home extends React.PureComponent {
                   </div>
                   <Autocomplete
                     isShowFullResults
-                    getSuggestions={getShabadList}
+                    getSuggestions={(type === 8) ? getShabadsFromChatbot : getShabadList}
                     searchOptions={{ type, source, writer }}
                     value={query}
                   />

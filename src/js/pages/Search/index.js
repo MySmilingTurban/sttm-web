@@ -2,20 +2,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { buildApiUrl } from '@sttm/banidb';
-import { CHATBOT_API_URL, TEXTS } from '../../constants';
+import { TEXTS } from '../../constants';
 import PageLoader from '../PageLoader';
 import GenericError, { SachKaur } from '../../components/GenericError';
 import Layout, { Stub } from './Layout';
-import { getShabadIDList, getShabadListURL, getShabadsFromShabadIDList } from '@/util';
+import { getShabadsFromChatbot } from '@/util';
 
 export default class Search extends React.PureComponent {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
-      idList: [],
-    };
+      error: null,
+      shabadData: [],
+      isLoaded: false
+    }
   }
-
   static defaultProps = {
     offset: 0,
   };
@@ -28,27 +29,33 @@ export default class Search extends React.PureComponent {
     writer: PropTypes.string,
   };
 
-  setIDList = () => {
-    const { q, type } = this.props;
-    if ( type === 8 ) {
-      let shabadList = getShabadIDList(q);
-      this.setState({ idList: shabadList });
-    }
-  }
-
-  async componentDidMount() {
-    const { q, type } = this.props;
-    console.log("type: ", type);
-    if ( type === 8 ) {
-      const shabadList = await getShabadIDList(q);
-      this.setIDList(shabadList);
+  componentDidMount() {
+    const { q, type, source, offset, writer } = this.props;
+    if (type === 8) {
+      getShabadsFromChatbot(q, {type, source, writer})
+        .then(
+          (result) => {
+            this.setState({
+              isLoaded: true,
+              shabadData: result
+            });
+          },
+          // error handler
+          (error) => {
+            this.setState({
+              isLoaded: true,
+              error
+            });
+          }
+        )
     }
   }
 
   render() {
     const { q, type, source, offset, writer } = this.props;
+    const { error, isLoaded, shabadData } = this.state;
 
-    if (q === '') {
+    if (q === '' || error !== null) {
       return (
         <GenericError
           title={TEXTS.EMPTY_QUERY}
@@ -61,27 +68,26 @@ export default class Search extends React.PureComponent {
     let url = encodeURI(
       buildApiUrl({ q, type, source, offset, writer, API_URL })
     );
-    if (type === 8) {
-      let resData = getShabadListURL(q);
-      url = encodeURI(`${resData}`)
-      console.log("resdata :", resData);
-    }
-    console.log(url, 'SEARCH RESULTS...');
 
     return (
       <PageLoader url={url}>
         {({ loading, data }) => {
-          if (loading || data === undefined) return <Stub />;
+          if (loading || data === undefined || (type === 8 ? !isLoaded : false)) return <Stub />;
 
-          let resultsInfo = data.resultsInfo;
-          let verses = data.verses;
+          let {resultsInfo, verses} = data;
 
           if (type === 8) {
-            let idList = this.state.idList;
-            let cData = getShabadsFromShabadIDList(idList)
-            console.log('CHATBOT RESULTS...', cData);
-            resultsInfo = cData.resultsInfo;
-            verses = cData.verses; 
+            const resData = shabadData;// async() => await getShabadsFromChatbot(q, {type, source, writer});
+            resultsInfo = {
+              pageResults: 10,
+              pages: {
+                page: 1,
+                resultsPerPage: 20,
+                totalPages: 1
+              },
+              totalResults: 10
+            };
+            verses = resData;//await Promise.resolve(resData);
           }
 
           return (

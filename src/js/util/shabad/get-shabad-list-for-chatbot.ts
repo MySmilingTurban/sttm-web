@@ -4,10 +4,11 @@ import { API_URL, SEARCH_TYPES, CHATBOT_API_URL } from '@/constants';
 import { toShabadURL } from '../url';
 import { translationMap, transliterationMap, getGurmukhiVerse, getVerseId, getShabadId, getUnicodeVerse } from '../api/shabad';
 import { getHighlightIndices } from '../gurbani';
+import { getShabadList } from './get-shabad-list';
 
 export const getShabadIDList = async function (query: String) {
     // refine the query for url
-    const url = encodeURI(`${CHATBOT_API_URL}search/?query=${query}&count=20`);
+    const url = encodeURI(`${CHATBOT_API_URL}search/?query=${query}&count=10`);
     // let res;
     // try {
     //     res = await axios.get(uri);
@@ -46,13 +47,14 @@ export const getShabadListURL =  async function (query:String) {
     return `https://api.banidb.com/v2/shabads/${idList.join(",")}`;
 }
 
-export const getShabadsFromShabadIDList = (idList: Object[], q: string) => {
-    const url = `https://api.banidb.com/v2/shabads/${idList.join(",")}`;
+export const getShabadsFromShabadIDList = (idList: String, q: string) => {
+    const url = `https://api.banidb.com/v2/shabads/${idList}`;
     return new Promise((resolve, reject) => {
         const json = fetch(url).then((response) => response.json());
         json.then(
         (data) => {
             const { shabads } = data;
+            console.log("shabads : ", data)
             const type = SEARCH_TYPES.ASK_A_QUESTION;
             const source = SOURCES.all;
             
@@ -61,9 +63,6 @@ export const getShabadsFromShabadIDList = (idList: Object[], q: string) => {
                 const shabadId = shabad.shabadInfo.shabadId;
                 const verseId = getVerseId(shabad.verses[0]);
                 let highlightPankti = getGurmukhiVerse(shabad.verses[0]);
-                if (type === 3) {
-                highlightPankti = translationMap["english"](shabad.verses[0]);
-                }
     
                 const highlightIndex = getHighlightIndices(
                     highlightPankti,

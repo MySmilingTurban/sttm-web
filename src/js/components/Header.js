@@ -28,6 +28,7 @@ import {
   getQueryParams,
   getShabadList,
   reformatSearchTypes,
+  getShabadsFromChatbot,
 } from '@/util';
 
 const { BACK_TO_HOME } = TEXTS;
@@ -314,7 +315,7 @@ class Header extends React.PureComponent {
                                         (isSearchPageRoute &&
                                           decodeURI(defaultQuery) !== query)
                                       }
-                                      getSuggestions={getShabadList}
+                                      getSuggestions={(type === 8) ? getShabadsFromChatbot : getShabadList}
                                       searchOptions={{
                                         type: parseInt(type),
                                         source,

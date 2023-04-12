@@ -4,7 +4,7 @@ import { Link, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Pagination from '../../components/Pagination';
-import { toShabadURL, toSearchURL, getShabadIDList } from '../../util';
+import { toShabadURL, toSearchURL, getShabadIDList, getShabadsFromChatbot } from '../../util';
 import { TYPES, SOURCES, PLACEHOLDERS, TEXTS } from '../../constants';
 import {
   ACTIONS,
@@ -22,33 +22,11 @@ export function Stub() {
 }
 
 class Layout extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      chatbotData: {},
-    };
-  }
-
   static propTypes = {
     pages: PropTypes.array,
     offset: PropTypes.number,
     ...SearchResults.propTypes,
   };
-
-  setChatbotData = (data) => {
-    this.setState({ chatbotDataUrl: data });
-  }
-
-  async componentDidMount() {
-    const { q, type, offset, source } = this.props;
-    console.log("type: ", type);
-    if ( type === 8 ) {
-      const shabadList = await getShabadIDList(q);
-      this.setChatbotData(shabadList);
-
-    } 
-    pageView(toSearchURL({ q, type, source, offset }));
-  }
 
   render() {
     let {
@@ -102,6 +80,8 @@ class Layout extends React.PureComponent {
       return <Redirect to={toShabadURL({ shabad, q, type, source })} />;
     }
 
+    console.log("data: ", resultsCount);
+    console.log("data shabad: ", shabads);
 
     const currentPage = offset;
 

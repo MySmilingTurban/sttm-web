@@ -1,14 +1,12 @@
 import { buildApiUrl } from '@sttm/banidb';
 import { SEARCH_TYPES } from '@/constants';
-import { SOURCES } from '@sttm/banidb';
 
 import { toShabadURL } from '../url';
 import { translationMap, transliterationMap, getGurmukhiVerse, getVerseId, getShabadId, getUnicodeVerse } from '../api/shabad';
 import { getHighlightIndices } from '../gurbani';
 
-const getShabads = async function (idList, q) {
-  const url = encodeURI(`https://api.banidb.com/v2/shabads/${idList.join(",")}`);
-  console.log("URL :", url);
+const getShabads = async function (idList: string[], q: string) {
+  const url = `https://api.banidb.com/v2/shabads/${idList.join(",")}`;
   return new Promise((resolve, reject) => {
     const json = fetch(url).then((response) => response.json());
     json.then(
@@ -37,11 +35,6 @@ const getShabads = async function (idList, q) {
             type
           );
 
-          const ids = {
-            shabadId,
-            verseId: getVerseId(verse)
-          };
-
           panktiList.push({
             pankti: getGurmukhiVerse(verse),
             translation: translationMap["english"](verse),
@@ -62,49 +55,7 @@ const getShabads = async function (idList, q) {
   });
 }
 
-// const getShabad = async function (idList, q) {
-//   const url = encodeURI(`https://api.banidb.com/v2/shabads/${idList.join(",")}`);
-//   return new Promise((resolve, reject) => {
-//     const json = fetch(url).then((response) => response.json());
-//     json.then(
-//       (data) => {
-//           const { shabads } = data;
-//           const type = SEARCH_TYPES.ASK_A_QUESTION;
-//           const source = SOURCES.all;
-          
-//           let panktiList = [];
-//           for (const shabad of shabads) {
-//               const shabadId = shabad.shabadInfo.shabadId;
-//               const verseId = getVerseId(shabad.verses[0]);
-//               let highlightPankti = getGurmukhiVerse(shabad.verses[0]);
-  
-//               const highlightIndex = getHighlightIndices(
-//                   highlightPankti,
-//                   q,
-//                   SEARCH_TYPES.FIRST_LETTERS
-//               );
-
-//               let pack = {
-//                 pankti: getGurmukhiVerse(shabad.verses[0]),
-//                 translation: translationMap["english"](shabad.verses[0]),
-//                 query: q,
-//                 url: toShabadURL({ shabad : { shabadId, verseId }, q, type }),
-//                 highlightIndex,
-//                 shabadId: shabadId,
-//               };
-//               console.log(pack)
-              
-//               panktiList.push(pack);
-//           }
-//           resolve(panktiList);
-//       },
-//       (error) => { 
-//         console.log(error);
-//         reject(error); });
-//   });
-// }
-
-export const getShabadList = async function (q, { type, source, writer }) {
+export const getShabadList = async function (q: string, { type, source, writer }) {
   const offset = 1;
   const isSearchTypeRomanizedFirstLetters = type === SEARCH_TYPES.ROMANIZED_FIRST_LETTERS_ANYWHERE;
   const isSearchAskaQuestion = type === SEARCH_TYPES.ASK_A_QUESTION;
@@ -157,7 +108,7 @@ export const getShabadList = async function (q, { type, source, writer }) {
   });
 }
 
-export const getShabadsFromChatbot = async function (q, { type, source, writer }) {
+export const getShabadsFromChatbot = async function (q: string, { type, source, writer }) {
   const idList = await getShabadList(q, { type, source, writer });
   const shabads = await getShabads(idList, q);
   return shabads;

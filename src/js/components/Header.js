@@ -315,7 +315,7 @@ class Header extends React.PureComponent {
                                         (isSearchPageRoute &&
                                           decodeURI(defaultQuery) !== query)
                                       }
-                                      getSuggestions={(type === 8) ? getShabadsFromChatbot : getShabadList}
+                                      getSuggestions={type === 8 ? getShabadsFromChatbot : getShabadList}
                                       searchOptions={{
                                         type: parseInt(type),
                                         source,

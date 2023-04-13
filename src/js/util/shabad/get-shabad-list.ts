@@ -1,12 +1,12 @@
 import { buildApiUrl } from '@sttm/banidb';
-import { SEARCH_TYPES } from '@/constants';
+import { CHATBOT_API_URL, SEARCH_TYPES } from '@/constants';
 
 import { toShabadURL } from '../url';
 import { translationMap, transliterationMap, getGurmukhiVerse, getVerseId, getShabadId, getUnicodeVerse } from '../api/shabad';
 import { getHighlightIndices } from '../gurbani';
 
 const getShabads = async function (idList: string[], q: string) {
-  const url = `https://api.banidb.com/v2/shabads/${idList.join(",")}`;
+  const url = `${API_URL}shabads/${idList.join(",")}`;
   return new Promise((resolve, reject) => {
     const json = fetch(url).then((response) => response.json());
     json.then(
@@ -60,7 +60,7 @@ export const getShabadList = async function (q: string, { type, source, writer }
   const isSearchTypeRomanizedFirstLetters = type === SEARCH_TYPES.ROMANIZED_FIRST_LETTERS_ANYWHERE;
   const isSearchAskaQuestion = type === SEARCH_TYPES.ASK_A_QUESTION;
   const livesearch = !isSearchTypeRomanizedFirstLetters;
-  const url = ( isSearchAskaQuestion ? encodeURI(`https://semanticgurbanisearch.sevaa.win/search/?query=${q}&count=5`) : encodeURI(buildApiUrl({ q, type, source, writer, offset, API_URL, livesearch })));
+  const url = ( isSearchAskaQuestion ? encodeURI(`${CHATBOT_API_URL}search/?query=${q}&count=5`) : encodeURI(buildApiUrl({ q, type, source, writer, offset, API_URL, livesearch })));
   // console.log("URL :", url);
   return new Promise((resolve, reject) => {
     const json = fetch(url).then((response) => response.json());

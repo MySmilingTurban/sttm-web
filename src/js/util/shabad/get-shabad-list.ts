@@ -60,7 +60,7 @@ export const getShabadList = async function (q: string, { type, source, writer }
   const isSearchTypeRomanizedFirstLetters = type === SEARCH_TYPES.ROMANIZED_FIRST_LETTERS_ANYWHERE;
   const isSearchAskaQuestion = type === SEARCH_TYPES.ASK_A_QUESTION;
   const livesearch = !isSearchTypeRomanizedFirstLetters;
-  const url = ( isSearchAskaQuestion ? encodeURI(`https://semanticgurbanisearch.sevaa.win/search/?query=${q}&count=10`) : encodeURI(buildApiUrl({ q, type, source, writer, offset, API_URL, livesearch })));
+  const url = ( isSearchAskaQuestion ? encodeURI(`https://semanticgurbanisearch.sevaa.win/search/?query=${q}&count=5`) : encodeURI(buildApiUrl({ q, type, source, writer, offset, API_URL, livesearch })));
   // console.log("URL :", url);
   return new Promise((resolve, reject) => {
     const json = fetch(url).then((response) => response.json());

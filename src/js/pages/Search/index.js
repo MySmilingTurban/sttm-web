@@ -29,27 +29,113 @@ export default class Search extends React.PureComponent {
     writer: PropTypes.string,
   };
 
-  componentDidMount() {
-    const { q, type, source, offset, writer } = this.props;
-    if (type === 8) {
-      getShabadsFromChatbot(q, {type, source, writer})
-        .then(
-          (result) => {
-            this.setState({
-              isLoaded: true,
-              shabadData: result
-            });
-          },
-          // error handler
-          (error) => {
-            this.setState({
-              isLoaded: true,
-              error
-            });
-          }
-        )
+  // declare a variable to hold the request
+  request = null;
+
+  componentWillUnmount() {
+    if (this.request) {
+      this.request.cancel();
     }
   }
+
+  fetchData = (q) => {
+    const { type, source, writer } = this.props;
+    if (this.request) {
+      this.request.cancel();
+    }
+    this.request = getShabadsFromChatbot(q, {type, source, writer})
+      .then(
+        (result) => {
+          this.setState({
+            isLoaded: true,
+            shabadData: result
+          });
+        },
+        // error handler
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+  }
+
+  componentDidMount() {
+    const { q, type } = this.props;
+    if (type === 8) {
+      this.fetchData(q);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { q, type } = this.props;
+    if (type === 8 && prevProps.q !== q) {
+      this.fetchData(q);
+    }
+  }
+
+  // componentDidMount() {
+  //   const { q, type, source, offset, writer } = this.props;
+  //   if (type === 8) {
+  //     getShabadsFromChatbot(q, {type, source, writer})
+  //       .then(
+  //         (result) => {
+  //           this.setState({
+  //             isLoaded: true,
+  //             shabadData: result
+  //           });
+  //         },
+  //         // error handler
+  //         (error) => {
+  //           this.setState({
+  //             isLoaded: true,
+  //             error
+  //           });
+  //         }
+  //       )
+  //   }
+  // }
+
+  // // unmount/update the component mounted in componentDidMount
+  // componentWillUnmount() {
+  //   this.setState({
+  //     isLoaded: false,
+  //     shabadData: []
+  //   });
+  // }
+
+  // // shouldComponentUpdate
+  // // shouldComponentUpdate(nextProps, nextState) {
+  // //   const { q, type, source, offset, writer } = this.props;
+  // //   if (type === 8 && q !== nextProps.q) {
+  // //     return true;
+  // //   }
+  // //   return false;
+  // // }
+
+  // // update the component mounted in componentDidMount
+  // componentDidUpdate(prevProps) {
+  //   const { q, type, source, offset, writer } = this.props;
+  //   if (type === 8 && prevProps.q !== q) {
+  //     getShabadsFromChatbot(q, {type, source, writer})
+  //       .then(
+  //         (result) => {
+  //           this.setState({
+  //             isLoaded: true,
+  //             shabadData: result
+  //           });
+  //         },
+  //         // error handler
+  //         (error) => {
+  //           this.setState({
+  //             isLoaded: true,
+  //             error
+  //           });
+  //         }
+  //       )
+  //   }
+  // }
 
   render() {
     const { q, type, source, offset, writer } = this.props;

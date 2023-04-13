@@ -4,7 +4,7 @@ import { Link, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Pagination from '../../components/Pagination';
-import { toShabadURL, toSearchURL, getShabadIDList, getShabadsFromChatbot } from '../../util';
+import { toShabadURL, toSearchURL } from '../../util';
 import { TYPES, SOURCES, PLACEHOLDERS, TEXTS } from '../../constants';
 import {
   ACTIONS,

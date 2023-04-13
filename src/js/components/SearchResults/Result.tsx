@@ -40,12 +40,13 @@ import PreviewShabad from '../PreviewShabad';
 import { useEscapeKeyEventHandler } from '@/hooks';
 import DateAndTimeIcon from '@/components/Icons/DateAndTimeIcon';
 import { getFormattedDateTime } from '@/components/SearchResults/util/get-formatted-date-time';
+import { IMultipleShabadsProps } from '@/types/multiple-shabads';
 
 interface IShabadButtonWrapper {
   multipleShabads: IMultipleShabadsProps[]
 }
 interface IShabadResultProps {
-  shabad: any
+  shabad: any,
   q: string,
   type: number,
   source: string,

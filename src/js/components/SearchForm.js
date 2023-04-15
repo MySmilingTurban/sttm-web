@@ -373,8 +373,9 @@ export default class SearchForm extends React.PureComponent {
     const newSearchType = Number(value);
     let newSourceType = source;
     const isSearchTypeToAngSearchType = currentSearchType !== SEARCH_TYPES.ANG && newSearchType === SEARCH_TYPES.ANG;
-    const isSearchTypeToMainLetterSearchType = currentSearchType !== SEARCH_TYPES.MAIN_LETTERS && newSearchType === SEARCH_TYPES.MAIN_LETTERS
-    const isQueryToBeCleared = isSearchTypeToAngSearchType || (isSearchTypeToMainLetterSearchType && !this.isQueryAllowed(query, newSearchType));
+    const isSearchTypeToAskAQuestion = currentSearchType !== SEARCH_TYPES.ASK_A_QUESTION && newSearchType === SEARCH_TYPES.ASK_A_QUESTION;
+    const isSearchTypeToMainLetterSearchType = currentSearchType !== SEARCH_TYPES.MAIN_LETTERS && newSearchType === SEARCH_TYPES.MAIN_LETTERS;
+    const isQueryToBeCleared = isSearchTypeToAskAQuestion || isSearchTypeToAngSearchType || (isSearchTypeToMainLetterSearchType && !this.isQueryAllowed(query, newSearchType));
 
     // We are only showing keyboard :
     // If they falls in the gurmukhi keyboard category && keyboard is already open/active.
@@ -391,7 +392,7 @@ export default class SearchForm extends React.PureComponent {
           type: newSearchType,
           source: newSourceType,
           query: isQueryToBeCleared ? '' : query,
-          shouldSubmit: isSearchTypeToAngSearchType ? false :
+          shouldSubmit: (isSearchTypeToAngSearchType || isSearchTypeToAskAQuestion) ? false :
             this.props.submitOnChangeOf.includes('type') &&
             this.state.query !== '',
           displayGurmukhiKeyboard: isShowKeyboard,

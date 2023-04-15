@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { SOURCES, SEARCH_TYPES, TYPES, SOURCES_WITH_ANG, MAX_ANGS, SOURCE_WRITER_FILTER } from '../../constants';
-import { toSearchURL, getShabadList, reformatSearchTypes } from '../../util';
+import { toSearchURL, getShabadList, reformatSearchTypes, getShabadsFromChatbot } from '../../util';
 import { pageView } from '../../util/analytics';
 
 
@@ -168,7 +168,7 @@ class Home extends React.PureComponent {
                   </div>
                   <Autocomplete
                     isShowFullResults
-                    getSuggestions={getShabadList}
+                    getSuggestions={(type === 8) ? getShabadsFromChatbot : getShabadList}
                     searchOptions={{ type, source, writer }}
                     value={query}
                   />
@@ -204,9 +204,10 @@ class Home extends React.PureComponent {
                       ) : (
                         <select
                           name="source"
-                          value={source}
+                          value={parseInt(type) === SEARCH_TYPES['ASK_A_QUESTION'] ? 'all' : source} // would need to be changed when chatbot API search is limited to search only in SGGSJ
                           className={[isSourceChanged ? 'selected' : null]}
                           onChange={handleSearchSourceChange}
+                          disabled={parseInt(type) === SEARCH_TYPES['ASK_A_QUESTION']} // disable sources selection in Ask a Question search
                         >
                           {Object.entries(SOURCES).map(([value, children]) => (
                             <option key={value} value={value}>
@@ -223,7 +224,9 @@ class Home extends React.PureComponent {
                         name="writer"
                         value={writer}
                         className={[isWriterChanged ? 'selected' : null]}
-                        onChange={handleSearchWriterChange}>
+                        onChange={handleSearchWriterChange}
+                        disabled={parseInt(type) === SEARCH_TYPES['ASK_A_QUESTION']} // disable writers selection in Ask a Question search
+                        >
                         {
                           writers?.filter(e =>
                             source === 'G' || source === 'A' ? !SOURCE_WRITER_FILTER[source].includes(e.writerID)

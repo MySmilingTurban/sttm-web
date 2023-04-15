@@ -29,7 +29,7 @@ class Layout extends React.PureComponent {
   };
 
   render() {
-    const {
+    let {
       pages,
       offset,
       q,
@@ -107,7 +107,6 @@ class Layout extends React.PureComponent {
 
   handlePageClick = (pageNumber) => {
     const { q, type, source, offset } = this.props;
-
     const currentPage = offset;
 
     if (pageNumber === currentPage) {
@@ -125,11 +124,6 @@ class Layout extends React.PureComponent {
       })
     );
   };
-
-  componentDidMount() {
-    const { q, type, offset, source } = this.props;
-    pageView(toSearchURL({ q, type, source, offset }));
-  }
 }
 
 const stateToProps = (state) => state;

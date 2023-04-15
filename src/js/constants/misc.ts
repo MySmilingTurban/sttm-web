@@ -12,7 +12,7 @@ const _TYPES = [
   "Ang",
   "Main Letters (Gurmukhi)",
   "Romanized first letter anywhere (English)",
-  "Ask a Question"
+  "Ask a Question (English)"
 ]
 
 export const BANI_LENGTH_COLS = {

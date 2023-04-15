@@ -147,11 +147,12 @@ class Shabad extends React.PureComponent {
 
     const isSundarGutkaRoute = location.pathname.includes('sundar-gutka');
     const isAmritKeertanRoute = location.pathname.includes('amrit-keertan');
+    const isAskAQuestion = location.search.includes('type=8');
     const isParagraphMode = paragraphMode && isSundarGutkaRoute;
     const isShowFooterNav = this.props.hideMeta === false && !isMultiPage;
     const isShowMetaData = this.props.hideMeta === false && !fullScreenMode;
     const isShowControls = this.props.hideControls === false;
-    const isShowRelatedShabads = !isAmritKeertanRoute && !isSundarGutkaRoute && !fullScreenMode;
+    const isShowRelatedShabads = !isAmritKeertanRoute && !isSundarGutkaRoute && !fullScreenMode && !isAskAQuestion;
 
     return (
       <GlobalHotKeys

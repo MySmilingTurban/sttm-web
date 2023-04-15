@@ -204,9 +204,10 @@ class Home extends React.PureComponent {
                       ) : (
                         <select
                           name="source"
-                          value={source}
+                          value={parseInt(type) === SEARCH_TYPES['ASK_A_QUESTION'] ? 'all' : source} // would need to be changed when chatbot API search is limited to search only in SGGSJ
                           className={[isSourceChanged ? 'selected' : null]}
                           onChange={handleSearchSourceChange}
+                          disabled={parseInt(type) === SEARCH_TYPES['ASK_A_QUESTION']} // disable sources selection in Ask a Question search
                         >
                           {Object.entries(SOURCES).map(([value, children]) => (
                             <option key={value} value={value}>
@@ -223,7 +224,9 @@ class Home extends React.PureComponent {
                         name="writer"
                         value={writer}
                         className={[isWriterChanged ? 'selected' : null]}
-                        onChange={handleSearchWriterChange}>
+                        onChange={handleSearchWriterChange}
+                        disabled={parseInt(type) === SEARCH_TYPES['ASK_A_QUESTION']} // disable writers selection in Ask a Question search
+                        >
                         {
                           writers?.filter(e =>
                             source === 'G' || source === 'A' ? !SOURCE_WRITER_FILTER[source].includes(e.writerID)

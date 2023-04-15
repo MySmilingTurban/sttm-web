@@ -369,9 +369,10 @@ class Header extends React.PureComponent {
                         ) : (
                           <select
                             name="source"
-                            value={source}
+                            value={parseInt(type) === SEARCH_TYPES['ASK_A_QUESTION'] ? 'all' : source} // would need to be changed when chatbot API search is limited to search only in SGGSJ
                             onChange={handleSearchSourceChange}
                             className={[isSourceChanged ? 'selected' : null]}
+                            disabled={parseInt(type) === SEARCH_TYPES['ASK_A_QUESTION']} // disables sources selection for Ask a Question search
                           >
                             {Object.entries(SOURCES).map(
                               ([value, children]) => (
@@ -387,6 +388,7 @@ class Header extends React.PureComponent {
                           value={writer}
                           onChange={handleSearchWriterChange}
                           className={[isWriterChanged ? 'selected' : null]}
+                          disabled={parseInt(type) === SEARCH_TYPES['ASK_A_QUESTION']} // disables writers selection for Ask a Question search
                         >
                           {writers
                             ?.filter((e) =>

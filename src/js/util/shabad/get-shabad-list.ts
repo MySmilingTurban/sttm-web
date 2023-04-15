@@ -39,7 +39,7 @@ const getShabads = async function (idList: string[], q: string) {
             pankti: getGurmukhiVerse(verse),
             translation: translationMap["english"](verse),
             query: q,
-            url: toShabadURL({ shabad: pack, q, type, source }),
+            url: toShabadURL({ shabad: pack, q, type, source: source.sourceId }),
             highlightIndex,
             verseId: getVerseId(verse),
             shabadId: shabadId,

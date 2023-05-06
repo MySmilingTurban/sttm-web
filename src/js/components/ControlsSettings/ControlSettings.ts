@@ -46,6 +46,7 @@ export interface ISettingActions {
   toggleCartoonifiedPages: () => {},
   toggleShabadAudioPlayer: () => {},
   toggleParagraphMode: () => {},
+  toggleReadingMode: () => {},
   toggleSehajPaathMode: () => {},
   toggleSettingsPanel: () => {},
   closePinSettings: () => {},
@@ -56,6 +57,9 @@ export interface ISettingActions {
   toggleAdvancedOptions: () => {},
   setLarivaarAssistStrength: (attr: any) => {},
   setSgBaaniLength: (attr: any) => {},
+  setSplitView: (attr: boolean) => {},
+  setReadingMode: (attr: boolean) => {},
+  setSehajPaathMode: (attr: boolean) => {},
   location: {
     pathname?: string,
   },
@@ -76,6 +80,7 @@ export interface ISettingActions {
   translationFontSize: number,
   transliterationFontSize: number,
   paragraphMode: boolean,
+  readingMode: boolean,
   sehajPaathMode: boolean,
   autoScrollMode: boolean,
   lineHeight: number,
@@ -226,11 +231,15 @@ export const QUICK_SETTINGS = ({
   toggleCartoonifiedPages,
   toggleShabadAudioPlayer,
   toggleParagraphMode,
+  toggleReadingMode,
   toggleSehajPaathMode,
   toggleAutoScrollMode,
   setSteekLanguages,
   setSgBaaniLength,
   setVisraamStyle,
+  setSplitView,
+  setReadingMode,
+  setSehajPaathMode,
   translationLanguages,
   englishTranslationLanguages,
   hindiTranslationLanguages,
@@ -247,6 +256,7 @@ export const QUICK_SETTINGS = ({
   showCartoonifiedPages,
   showShabadAudioPlayer,
   paragraphMode,
+  readingMode,
   steekLanguages,
   sgBaaniLength,
   // eslint-disable-next-line no-unused-vars
@@ -364,7 +374,7 @@ export const QUICK_SETTINGS = ({
       tooltip: 'Set reading mode into Akhand Paath ( r )',
       checked: sehajPaathMode,
       stage: 'beta',
-      action: toggleSehajPaathMode,
+      action: () => {toggleSehajPaathMode(), setReadingMode(false), setSplitView(false)}
     } : {},
     isShowAutoScroll ? {
       type: 'toggle-option',
@@ -378,8 +388,15 @@ export const QUICK_SETTINGS = ({
       label: 'Split',
       tooltip: 'Set split mode ( / )',
       checked: splitView,
-      action: toggleSplitViewOption,
+      action: () => {toggleSplitViewOption(), setReadingMode(false), setSehajPaathMode(false) }
     },
+    !isShowSehajPaathMode ? {
+      type: 'toggle-option',
+      label: 'Reading',
+      tooltip: 'Set reading mode',
+      checked: readingMode,
+      action: () => {toggleReadingMode(), setSplitView(false), setSehajPaathMode(false) }
+    } : {},
     {
       type: 'toggle-option',
       label: 'Cartoon Images',

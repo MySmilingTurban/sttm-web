@@ -70,6 +70,7 @@ export const getShabadList = async function (q: string, { type, source, writer }
         if (isSearchAskaQuestion) {
           const { results } = data;
           panktiList = results.map((ele, idx) => ele.ID);
+          console.log("Pankti List: ", panktiList, "\n Results: ", results.map((ele, idx) => ele.Payload));
         } else {
           const { verses } = data;
           for (const shabad of verses) {

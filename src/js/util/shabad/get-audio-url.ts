@@ -1,8 +1,8 @@
 import axios from "axios";
-import { API_URL } from "@/constants";
+import { AUDIO_API_URL } from "@/constants";
 
 export const checkAPIHealth = async function () {
-  const uri = `${API_URL}health/`;
+  const uri = `${AUDIO_API_URL}health/`;
   const user = 'admin';
   const password = process.env.AUDIO_API_PASS;
   let APIisHealthy = false;
@@ -28,7 +28,7 @@ export const checkAPIHealth = async function () {
 }
 
 export const getShabadAudioUrl = async function (info: any) {
-  const uri = `${API_URL}shabads/${info.shabadId}/`;
+  const uri = `${AUDIO_API_URL}shabads/${info.shabadId}/`;
   const user = 'admin';
   const password = process.env.AUDIO_API_PASS;
   let res;
